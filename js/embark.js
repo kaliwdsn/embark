@@ -373,6 +373,7 @@ EmbarkJS.Messages.listenTo = function (options, callback) {
 };
 
 EmbarkJS.Names = {};
+EmbarkJS.Names.noProviderError = 'Name system provider not set; e.g EmbarkJS.Names.setProvider("ens")';
 
 EmbarkJS.Names.Providers = {};
 
@@ -395,7 +396,7 @@ EmbarkJS.Names.setProvider = function (provider, options) {
 // resolve resolves a name into an identifier of some kind
 EmbarkJS.Names.resolve = function (name, callback) {
   if (!this.currentNameSystems) {
-    throw new Error('Name system provider not set; e.g EmbarkJS.Names.setProvider("ens")');
+    throw new Error(this.noProviderError);
   }
   return this.currentNameSystems.resolve(name, callback);
 };
@@ -403,9 +404,16 @@ EmbarkJS.Names.resolve = function (name, callback) {
 // the reverse of resolve, resolves using an identifier to get to a name
 EmbarkJS.Names.lookup = function (identifier, callback) {
   if (!this.currentNameSystems) {
-    throw new Error('Name system provider not set; e.g EmbarkJS.Names.setProvider("ens")');
+    throw new Error(this.noProviderError);
   }
   return this.currentNameSystems.lookup(identifier, callback);
+};
+
+EmbarkJS.Names.registerSubDomain = function (name, address, callback) {
+  if (!this.currentNameSystems) {
+    throw new Error(this.noProviderError);
+  }
+  return this.currentNameSystems.registerSubDomain(name, address, callback);
 };
 
 EmbarkJS.Names.isAvailable = function () {
